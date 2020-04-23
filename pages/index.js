@@ -25,7 +25,7 @@ export default function Home() {
             >
               <h3>Editor &rarr;</h3>
               <p>
-                EditorJS page - proof of concept for rich text editor for React.
+                Editor.js page - proof of concept for rich text editing with React.
               </p>
             </a>
           </Link>
