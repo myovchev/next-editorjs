@@ -1,53 +1,51 @@
+import React, { useState } from 'react';
 import Head from 'next/head'
-import Link from 'next/link'
+import dynamic from 'next/dynamic'
+import { useSaveCallback, useLoadData, options, useSetData, useClearDataCallback } from '../components/Editor';
 
-export default function Home() {
+const Editor = dynamic(
+  () => import('../components/Editor/editor').then(mod => mod.EditorContainer),
+  { ssr: false }
+);
+
+export default function EditorPage() {
+  const [editor, setEditor] = useState(null);
+  
+  // save handler
+  const onSave = useSaveCallback(editor);
+
+  // load data
+  const { data, loading } = useLoadData();
+
+  // set saved data
+  useSetData(editor, data);
+
+  // clear data callback
+  const clearData = useClearDataCallback(editor);
+
+  const disabled = editor === null || loading;
+
   return (
     <div className="container">
       <Head>
-        <title>Create Next App</title>
+        <title>EditorJs</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main>
         <h1 className="title">
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
+          Example <a href="https://github.com/codex-team/editor.js">EditorJs</a>
         </h1>
 
         <p className="description">
-          Get started by editing <code>pages/index.js</code>
+          Hit TAB on empty line <code>for toolbar</code>, select text for <code>more options</code>
         </p>
 
-        <div className="grid">
-          <Link href="/editor">
-            <a
-              className="card"
-            >
-              <h3>Editor &rarr;</h3>
-              <p>
-                EditorJS page - proof of concept for rich text editor for React.
-              </p>
-            </a>
-          </Link>
-          
-          <a href="https://nextjs.org/docs" className="card">
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className="card">
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/zeit/next.js/tree/master/examples"
-            className="card"
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
+        <p><a href="#" onClick={clearData}>Clear data</a></p>
+        <div className="editorContainer">
+          <Editor reInit editorRef={setEditor} options={options} data={data} />
         </div>
+        <button disabled={disabled} type="button" onClick={onSave}>Save &amp; see console &amp; Reload</button>{' '}
       </main>
 
       <footer>
@@ -80,6 +78,11 @@ export default function Home() {
           align-items: center;
         }
 
+        .editorContainer {
+          width: 100%;
+          margin-bottom: 10px;
+        }
+
         footer {
           width: 100%;
           height: 100px;
@@ -104,14 +107,14 @@ export default function Home() {
           text-decoration: none;
         }
 
-        .title a {
+        a, .title a {
           color: #0070f3;
           text-decoration: none;
         }
 
-        .title a:hover,
-        .title a:focus,
-        .title a:active {
+        a:hover, .title a:hover,
+        a:focus, .title a:focus,
+        a:active, .title a:active {
           text-decoration: underline;
         }
 
@@ -140,48 +143,30 @@ export default function Home() {
             DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
         }
 
-        .grid {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-wrap: wrap;
-
-          max-width: 800px;
-          margin-top: 3rem;
-        }
-
-        .card {
-          margin: 1rem;
-          flex-basis: 45%;
-          padding: 1.5rem;
-          text-align: left;
-          color: inherit;
-          text-decoration: none;
-          border: 1px solid #eaeaea;
-          border-radius: 10px;
-          transition: color 0.15s ease, border-color 0.15s ease;
-        }
-
-        .card:hover,
-        .card:focus,
-        .card:active {
-          color: #0070f3;
-          border-color: #0070f3;
-        }
-
-        .card h3 {
-          margin: 0 0 1rem 0;
-          font-size: 1.5rem;
-        }
-
-        .card p {
-          margin: 0;
-          font-size: 1.25rem;
-          line-height: 1.5;
-        }
-
         .logo {
           height: 1em;
+        }
+
+        button {
+          cursor: pointer;
+          color: #fff !important;
+          text-transform: uppercase;
+          text-decoration: none;
+          background: #ed3330;
+          padding: 20px;
+          border-radius: 5px;
+          display: inline-block;
+          border: none;
+          transition: all 0.4s ease 0s;
+        }
+
+        button:hover, button:disabled {
+          background: #434343;
+          letter-spacing: 1px;
+          -webkit-box-shadow: 0px 5px 40px -10px rgba(0,0,0,0.57);
+          -moz-box-shadow: 0px 5px 40px -10px rgba(0,0,0,0.57);
+          box-shadow: 5px 40px -10px rgba(0,0,0,0.57);
+          transition: all 0.4s ease 0s;
         }
 
         @media (max-width: 600px) {
