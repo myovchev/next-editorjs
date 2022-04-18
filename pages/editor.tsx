@@ -1,29 +1,41 @@
-import React, { useState } from 'react';
-import Head from 'next/head'
-import dynamic from 'next/dynamic'
-import { useSaveCallback, useLoadData, options, useSetData, useClearDataCallback } from '../components/Editor';
+import React, { useState } from "react"
+import Head from "next/head"
+import dynamic from "next/dynamic"
+import {
+  useSaveCallback,
+  useLoadData,
+  options,
+  useSetData,
+  useClearDataCallback,
+} from "../components/Editor"
 
-const Editor = dynamic(
-  () => import('../components/Editor/editor').then(mod => mod.EditorContainer),
+const Editor = dynamic<{
+  editorRef: any
+  children?: any
+  data: any
+  options: any
+}>(
+  () =>
+    import("../components/Editor/editor").then((mod) => mod.EditorContainer),
   { ssr: false }
-);
+)
 
 export default function EditorPage() {
-  const [editor, setEditor] = useState(null);
-  
+  const [editor, setEditor] = useState(null)
+
   // save handler
-  const onSave = useSaveCallback(editor);
+  const onSave = useSaveCallback(editor)
 
   // load data
-  const { data, loading } = useLoadData();
+  const { data, loading } = useLoadData()
 
   // set saved data
-  useSetData(editor, data);
+  useSetData(editor, data)
 
   // clear data callback
-  const clearData = useClearDataCallback(editor);
+  const clearData = useClearDataCallback(editor)
 
-  const disabled = editor === null || loading;
+  const disabled = editor === null || loading
 
   return (
     <div className="container">
@@ -36,25 +48,30 @@ export default function EditorPage() {
         <h1 className="title">
           Example <a href="https://github.com/codex-team/editor.js">EditorJs</a>
         </h1>
-
         <p className="description">
-          Hit TAB on empty line <code>for toolbar</code>, select text for <code>more options</code>
+          Hit TAB on empty line <code>for toolbar</code>, select text for{" "}
+          <code>more options</code>
         </p>
-
-        <p><a href="#" onClick={clearData}>Clear data</a></p>
+        <p>
+          <a href="#" onClick={clearData}>
+            Clear data
+          </a>
+        </p>
         <div className="editorContainer">
-          <Editor reInit editorRef={setEditor} options={options} data={data} />
+          <Editor editorRef={setEditor} options={options} data={data} />
         </div>
-        <button disabled={disabled} type="button" onClick={onSave}>Save &amp; see console &amp; Reload</button>{' '}
+        <button disabled={disabled} type="button" onClick={onSave}>
+          Save &amp; see console &amp; Reload
+        </button>{" "}
       </main>
 
       <footer>
         <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
+          href="https://vercel.com?utm_source=create-next-app"
           target="_blank"
           rel="noopener noreferrer"
         >
-          NextJS is powered by{' '}
+          NextJS is powered by{" "}
           <img src="/vercel.svg" alt="Vercel Logo" className="logo" />
         </a>
       </footer>
@@ -107,14 +124,18 @@ export default function EditorPage() {
           text-decoration: none;
         }
 
-        a, .title a {
+        a,
+        .title a {
           color: #0070f3;
           text-decoration: none;
         }
 
-        a:hover, .title a:hover,
-        a:focus, .title a:focus,
-        a:active, .title a:active {
+        a:hover,
+        .title a:hover,
+        a:focus,
+        .title a:focus,
+        a:active,
+        .title a:active {
           text-decoration: underline;
         }
 
@@ -160,12 +181,13 @@ export default function EditorPage() {
           transition: all 0.4s ease 0s;
         }
 
-        button:hover, button:disabled {
+        button:hover,
+        button:disabled {
           background: #434343;
           letter-spacing: 1px;
-          -webkit-box-shadow: 0px 5px 40px -10px rgba(0,0,0,0.57);
-          -moz-box-shadow: 0px 5px 40px -10px rgba(0,0,0,0.57);
-          box-shadow: 5px 40px -10px rgba(0,0,0,0.57);
+          -webkit-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+          -moz-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+          box-shadow: 5px 40px -10px rgba(0, 0, 0, 0.57);
           transition: all 0.4s ease 0s;
         }
 
